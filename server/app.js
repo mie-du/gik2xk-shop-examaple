@@ -31,7 +31,8 @@ app.post('/products/:id/addToCart', async (req, res) => {
 
   const foundOrCreatedCart = await db.cart.findOrCreate({
     /* Where tar emot villkor samt övrig data man vill spara ifall det blir en create */
-    where: { userId, payed: false },
+    where: { userId },
+    defaults: { payed: false },
     order: [['createdAt', 'desc']]
   });
 
@@ -55,15 +56,18 @@ app.get('/users/:id/getCart', async (req, res) => {
   });
 
   //om man vill städa upp lite bland produkterna så att inte cartProduct följer med som hela objekt.
-  const cartProductItems = cart.products.map((product) => {
-    return {
-      id: product.id,
-      title: product.title,
-      body: product.body,
-      price: product.price,
-      amount: product.cartProduct.amount
-    };
-  });
+  let cartProductItems = [];
+  if (cart.products) {
+    cartProductItems = cart.products.map((product) => {
+      return {
+        id: product.id,
+        title: product.title,
+        body: product.body,
+        price: product.price,
+        amount: product.cartProduct.amount
+      };
+    });
+  }
   const cleanCart = {
     id: cart.id,
     payed: cart.payed,

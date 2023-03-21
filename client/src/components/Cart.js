@@ -10,6 +10,7 @@ function Cart() {
   useEffect(() => {
     getCart(userId).then((cart) => setCart(cart));
   }, []);
+  console.log(cart);
 
   //?. är en genväg för att först kolla om cart ens finns, innan vi kollar om det finns en products-egenskap. istället för if(cart && cart.products)
   return (
